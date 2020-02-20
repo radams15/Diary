@@ -1,6 +1,10 @@
 import time
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import ttk
+from os import path
+from datetime import datetime
+
 
 import pygubu
 
@@ -10,7 +14,7 @@ from encryption import Crypt
 
 state_invert = {"normal":"disabled", "disabled":"normal"}
 
-SAVE_FILE = "save.data"
+SAVE_FILE = path.join(path.expanduser("~"), ".config", "diary.data")
 
 REVERSE_ORDER = False
 
@@ -39,7 +43,10 @@ class MainApp:
 
         def time_now():
             time_entry.delete(0, "end")
-            time_entry.insert(0, time.time())
+            t = time.time()
+            t_dt = datetime.fromtimestamp(t)
+            t_str = t_dt.strftime("%A %B %-d %Y")
+            time_entry.insert(0, t_str)
 
         now_button["command"] = time_now
         lock_button.grid_remove()
@@ -47,8 +54,7 @@ class MainApp:
 
         def save():
             time_data, title, body_text = time_entry.get(), title_entry.get(), body.get("1.0", tk.END)
-            time_num = float(time_data)
-            storage.save_record(Record(time_num, title, body_text))
+            storage.save_record(Record(time_data, title, body_text))
             top3.destroy()
 
         save_button["command"] = save
@@ -106,10 +112,14 @@ class MainApp:
         now_button: ttk.Button = builder3.get_object("now_button", top3)
         lock_button: ttk.Button = builder3.get_object("lock_button", top3)
         save_button: ttk.Button = builder3.get_object("save_button", top3)
+        delete_button: ttk.Button = builder3.get_object("delete_button", top3)
 
         def time_now():
             time_entry.delete(0, "end")
-            time_entry.insert(0, time.time())
+            t = time.time()
+            t_dt = datetime.fromtimestamp(t)
+            t_str = t_dt.strftime("%A %B %-d %Y")
+            time_entry.insert(0, t_str)
         now_button["command"] = time_now
 
         def lock():
@@ -117,21 +127,28 @@ class MainApp:
             title_entry.configure(state=state_invert[str(title_entry.cget("state"))])
             body.configure(state=state_invert[str(body.cget("state"))])
 
+        def delete_entry():
+            should_delete = messagebox.askquestion("Really Delete?")
+            if should_delete == "yes":
+                storage.delete_record(record)
+                top3.destroy()
+                self.refresh()
+
+        delete_button["command"] = delete_entry
         lock_button["command"] = lock
 
         body.configure(state="normal")
         body.insert("end", record.body)
         body.configure(state="disabled")
         title_entry.insert("end", record.title)
-        time_entry.insert("end", record.date.timestamp())
+        time_entry.insert("end", record.format_date())
         time_entry.configure(state="disabled")
         title_entry.configure(state="disabled")
 
         def save():
             time_data, title, body_text = time_entry.get(), title_entry.get(), body.get("1.0", tk.END)
             body_text = body_text.rstrip()
-            time_num = float(time_data)
-            storage.update_record(record, Record(time_num, title, body_text))
+            storage.update_record(record, Record(time_data, title, body_text))
             top3.destroy()
             self.refresh()
 
@@ -176,3 +193,5 @@ if __name__ == '__main__':
     root = tk.Tk()
     main_app = MainApp(root)
     root.mainloop()
+
+    storage.save()

@@ -19,7 +19,6 @@ class Storage:
         except json.JSONDecodeError:
             print("DECODE ERROR")
             exit()
-            #self._refresh_save()
 
     def _refresh_save(self):
         json.dump([], open(self.file, "w"))
@@ -65,3 +64,11 @@ class Storage:
 
         self.save()
         self.load()
+
+    def delete_record(self, record:Record):
+        self.load()
+
+        for i, j in enumerate(self.json_data):
+            if j[0] == record.date.timestamp():
+                del self.json_data[i]
+        self.save()

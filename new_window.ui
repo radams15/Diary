@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <interface>
-  <object class="ttk.Frame" id="mainwindow">
+  <object id="mainwindow" class="ttk.Frame">
     <property name="height">200</property>
     <property name="width">200</property>
     <layout>
@@ -9,7 +9,7 @@
       <property name="row">0</property>
     </layout>
     <child>
-      <object class="ttk.Label" id="time_label">
+      <object id="time_label" class="ttk.Label">
         <property name="text" translatable="yes">Time</property>
         <layout>
           <property name="column">0</property>
@@ -19,7 +19,7 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Entry" id="time_entry">
+      <object id="time_entry" class="ttk.Entry">
         <layout>
           <property name="column">0</property>
           <property name="propagate">True</property>
@@ -28,7 +28,7 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Button" id="now_button">
+      <object id="now_button" class="ttk.Button">
         <property name="text" translatable="yes">Now</property>
         <layout>
           <property name="column">1</property>
@@ -38,7 +38,7 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Entry" id="title_entry">
+      <object id="title_entry" class="ttk.Entry">
         <layout>
           <property name="column">0</property>
           <property name="propagate">True</property>
@@ -47,21 +47,21 @@
       </object>
     </child>
     <child>
-      <object class="tk.Text" id="body">
+      <object id="body" class="tk.Text">
         <property name="height">10</property>
         <property name="state">normal</property>
         <property name="width">50</property>
         <layout>
           <property name="column">0</property>
-          <property name="columnspan">2</property>
+          <property name="columnspan">3</property>
           <property name="propagate">True</property>
           <property name="row">4</property>
         </layout>
       </object>
     </child>
     <child>
-      <object class="ttk.Button" id="lock_button">
-        <property name="text" translatable="yes">lock</property>
+      <object id="lock_button" class="ttk.Button">
+        <property name="text" translatable="yes">Lock</property>
         <layout>
           <property name="column">0</property>
           <property name="propagate">True</property>
@@ -70,10 +70,20 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Button" id="save_button">
+      <object id="save_button" class="ttk.Button">
         <property name="text" translatable="yes">Save</property>
         <layout>
           <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">5</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object id="delete_button" class="ttk.Button">
+        <property name="text" translatable="yes">Delete</property>
+        <layout>
+          <property name="column">2</property>
           <property name="propagate">True</property>
           <property name="row">5</property>
         </layout>
