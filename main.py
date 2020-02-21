@@ -14,7 +14,9 @@ from encryption import Crypt
 
 state_invert = {"normal":"disabled", "disabled":"normal"}
 
-SAVE_FILE = path.join(path.expanduser("~"), ".config", "diary.data")
+SAVE_FILE = "diary.data"
+BACKUP_NUM = 3
+BACKUP_DIR = "diary_backup/"
 
 REVERSE_ORDER = False
 
@@ -45,7 +47,7 @@ class MainApp:
             time_entry.delete(0, "end")
             t = time.time()
             t_dt = datetime.fromtimestamp(t)
-            t_str = t_dt.strftime("%A %B %-d %Y")
+            t_str = t_dt.strftime("%A %B %d %Y %X")
             time_entry.insert(0, t_str)
 
         now_button["command"] = time_now
@@ -118,7 +120,7 @@ class MainApp:
             time_entry.delete(0, "end")
             t = time.time()
             t_dt = datetime.fromtimestamp(t)
-            t_str = t_dt.strftime("%A %B %-d %Y")
+            t_str = t_dt.strftime("%A %B %d %Y %X")
             time_entry.insert(0, t_str)
         now_button["command"] = time_now
 
@@ -167,6 +169,8 @@ class PasswordApp:
         self.pw_box: ttk.Entry = self.builder.get_object("password_box")
         self.builder.get_object("ok_button")["command"] = self.ok
 
+        self.pw_box.focus_set()
+
         self.master = master
 
     def ok(self, event=None):
@@ -178,6 +182,7 @@ class PasswordApp:
 
 
 if __name__ == '__main__':
+
     ENCRYPT = True
 
     root = tk.Tk()
@@ -188,10 +193,11 @@ if __name__ == '__main__':
 
     crypt = Crypt(password)
 
-    storage = Storage(SAVE_FILE, crypt, save_crypt=ENCRYPT)
+    storage = Storage(SAVE_FILE, crypt, BACKUP_DIR, save_crypt=ENCRYPT)
 
     root = tk.Tk()
     main_app = MainApp(root)
     root.mainloop()
 
+    storage.backup(BACKUP_NUM)
     storage.save()

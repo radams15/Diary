@@ -1,15 +1,20 @@
 import json
 import os
+from shutil import copyfile
 
 from encryption import Crypt
 from record import Record
 
 class Storage:
-    def __init__(self, file: str, crypt: Crypt, save_crypt=True):
+    def __init__(self, file: str, crypt: Crypt, backup_dir: str, save_crypt=True):
         self.file = file
         self.json_data = []
         self.crypt = crypt
         self.save_crypt = save_crypt
+        self.backup_dir = backup_dir
+
+        if not os.path.exists(self.backup_dir):
+            os.mkdir(self.backup_dir)
 
         if not os.path.exists(self.file):
             self._refresh_save()
@@ -72,3 +77,10 @@ class Storage:
             if j[0] == record.date.timestamp():
                 del self.json_data[i]
         self.save()
+
+    def backup(self, number):
+        base_name = os.path.join(self.backup_dir, "{}.data")
+        for i in range(number, 0, -1):
+            copyfile(base_name.format(i-1), base_name.format(i))
+
+        copyfile(self.file, base_name.format(0))

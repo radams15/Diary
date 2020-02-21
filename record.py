@@ -1,6 +1,6 @@
 from datetime import datetime
 
-DATE_FORMAT = "%A %B %d %Y"
+DATE_FORMAT = "%A %B %d %Y %X"
 
 class Record:
     def __init__(self, date, title: str, body: str):
